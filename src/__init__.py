@@ -39,15 +39,29 @@ Typical flow:
 3. Use manager methods to compute settlements, detect debtors, validate input
    integrity, and calculate balances or taxes.
 
-Example:
--------
-A simplified usage example::
+Usage examples
+--------------
+Import the main project classes::
 
-    from src.manager import Manager
-    from src.models import Parameters
+    >>> from src.manager import Manager
+    >>> from src.models import Parameters
 
-    parameters = Parameters()
-    manager = Manager(parameters)
+Create the application parameters and manager::
+
+    >>> parameters = Parameters()
+    >>> manager = Manager(parameters)
+
+Calculate a financial summary for a selected year::
+
+    >>> annual_balance = manager.calculate_annual_balance(year=2023)
+    >>> print(annual_balance)
+
+Use the manager to validate loaded rental data::
+
+    >>> manager.validate_data()
+
+The exact arguments required by :class:`src.models.Parameters` depend on the
+configuration fields defined in the project.
 
 Data is loaded from JSON files in the ``data/`` directory, then transformed into
 typed model instances. This keeps business operations explicit and easier to
@@ -55,7 +69,8 @@ test than working with raw dictionaries.
 
 Documentation
 -------------
-Public methods should describe their arguments and return values, for example::
+Public methods should describe their arguments, return values, and usage
+examples, for example::
 
 Args:
 ----
@@ -66,6 +81,10 @@ Returns:
 -------
         float:
             The annual balance.
+
+Example:
+-------
+        >>> manager.calculate_annual_balance(year=2023)
 
 Highlights
 ----------
