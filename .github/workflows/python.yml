@@ -1,8 +1,7 @@
 ```yaml
 name: NIP Rent
 
-on:
-  push:
+on: [push]
 
 permissions:
   contents: read
@@ -21,7 +20,7 @@ jobs:
       - name: Install UV
         uses: astral-sh/setup-uv@v7
         with:
-          python-version-file: ".python-version"
+          python-version-file: .python-version
 
       - name: Install the project
         run: uv sync --dev
@@ -37,8 +36,8 @@ jobs:
 
   deploy-docs:
     name: Generate and deploy documentation
-    runs-on: ubuntu-22.04
     needs: test
+    runs-on: ubuntu-22.04
 
     environment:
       name: github-pages
@@ -51,18 +50,18 @@ jobs:
       - name: Install UV
         uses: astral-sh/setup-uv@v7
         with:
-          python-version-file: ".python-version"
+          python-version-file: .python-version
 
       - name: Install the project
         run: uv sync --dev
 
       - name: Generate Docs
-        run: uv run pdoc src/ -o ./docs-output
+        run: uv run pdoc src -o ./docs-output
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./docs-output"
+          path: ./docs-output
 
       - name: Deploy to GitHub Pages
         id: deployment
