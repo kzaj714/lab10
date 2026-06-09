@@ -1,7 +1,9 @@
 ```yaml
 name: NIP Rent
 
-on: [push]
+"on":
+  push:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -9,34 +11,8 @@ permissions:
   id-token: write
 
 jobs:
-  test:
-    name: Test with pytest
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Install UV
-        uses: astral-sh/setup-uv@v7
-        with:
-          python-version-file: .python-version
-
-      - name: Install the project
-        run: uv sync --dev
-
-      - name: Run tests
-        run: uv run pytest tests -v
-
-      - name: Run linter (code/src)
-        run: uv run ruff check src --exit-zero
-
-      - name: Run linter (main_demo.py)
-        run: uv run ruff check main_demo.py --exit-zero
-
-  deploy-docs:
-    name: Generate and deploy documentation
-    needs: test
+  test-and-deploy:
+    name: Test and deploy documentation
     runs-on: ubuntu-22.04
 
     environment:
@@ -48,12 +24,21 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Install UV
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v8.2.0
         with:
           python-version-file: .python-version
 
       - name: Install the project
         run: uv sync --dev
+
+      - name: Run tests
+        run: uv run pytest tests -v
+
+      - name: Run linter for src
+        run: uv run ruff check src --exit-zero
+
+      - name: Run linter for main_demo.py
+        run: uv run ruff check main_demo.py --exit-zero
 
       - name: Generate Docs
         run: uv run pdoc src -o ./docs-output
