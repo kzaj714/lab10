@@ -1,4 +1,3 @@
-```python
 """NIP Rent: apartment rental settlement toolkit.
 
 The :mod:`src` package is the core domain layer of the project. It models the
@@ -40,7 +39,7 @@ Typical flow:
 3. Use manager methods to compute settlements, detect debtors, validate input
    integrity, and calculate balances or taxes.
 
-Example
+Example:
 -------
 A simplified usage example::
 
@@ -58,13 +57,13 @@ Documentation
 -------------
 Public methods should describe their arguments and return values, for example::
 
-    Args:
-    ----
+Args:
+----
         year (int):
             The year for which to calculate the balance.
 
-    Returns:
-    -------
+Returns:
+-------
         float:
             The annual balance.
 
@@ -79,5 +78,5 @@ Authors
 -------
 Łukasz Kułacz - initial implementation, testing, documentation
 Kamil Zając - technik obibok
+
 """
-```
