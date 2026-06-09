@@ -1,6 +1,8 @@
+```yaml
 name: NIP Rent
 
-on: [push]
+on:
+  push:
 
 permissions:
   contents: read
@@ -13,21 +15,56 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v6
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
-    - name: Install UV
-      uses: astral-sh/setup-uv@v7
-      with:
-        python-version-file: ".python-version"
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version-file: ".python-version"
 
-    - name: Install the project
-      run: uv sync --dev
+      - name: Install the project
+        run: uv sync --dev
 
-    - name: Run tests
-      run: uv run pytest tests -v 
+      - name: Run tests
+        run: uv run pytest tests -v
 
-    - name: Run linter (code/src)
-      run: uv run ruff check src --exit-zero
+      - name: Run linter (code/src)
+        run: uv run ruff check src --exit-zero
 
-    - name: Run linter (main_demo.py)
-      run: uv run ruff check main_demo.py --exit-zero
+      - name: Run linter (main_demo.py)
+        run: uv run ruff check main_demo.py --exit-zero
+
+  deploy-docs:
+    name: Generate and deploy documentation
+    runs-on: ubuntu-22.04
+    needs: test
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install the project
+        run: uv sync --dev
+
+      - name: Generate Docs
+        run: uv run pdoc src/ -o ./docs-output
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "./docs-output"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```

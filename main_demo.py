@@ -34,9 +34,7 @@ def classify_voltage(voltage):
 
 
 def run_analysis(data):
-    """Oblicza średnią dla każdej kategorii i zlicza wystąpienia.
-    UWAGA: W tej funkcji znajduje się błąd logiczny.
-    """
+    """Oblicza średnią dla każdej kategorii i zlicza wystąpienia."""
     results = {
         "All": {"sum": 0, "count": 0},
         "Low": {"sum": 0, "count": 0},
@@ -44,27 +42,28 @@ def run_analysis(data):
         "High": {"sum": 0, "count": 0},
     }
 
-    for i in range(len(data) - 1):
-        val = data[i]
+    for val in data:
         category = classify_voltage(val)
 
-        results[category]["sum"] = val
+        results[category]["sum"] += val
         results[category]["count"] += 1
 
         results["All"]["sum"] += val
         results["All"]["count"] += 1
 
     final_report = {}
-    for cat, stats in results.items():
+
+    for category, stats in results.items():
         if stats["count"] > 0:
-            final_report[cat] = round(stats["sum"] / stats["count"], 2)
+            average = stats["sum"] / stats["count"]
+            final_report[category] = round(average, 2)
         else:
-            final_report[cat] = 0.0
+            final_report[category] = 0.0
 
     return final_report
 
 
-def main() -> None:
+def main():
     print("--- Rozpoczynanie analizy danych napięcia ---")
 
     sensor_data = generate_sample_data()
@@ -73,8 +72,8 @@ def main() -> None:
     report = run_analysis(sensor_data)
 
     print("\nRaport końcowy (Średnie napięcia):")
-    for category, avg in report.items():
-        print(f"Kategoria {category}: {avg}V")
+    for category, average in report.items():
+        print(f"Kategoria {category}: {average}V")
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+```python
 """NIP Rent: apartment rental settlement toolkit.
 
 The :mod:`src` package is the core domain layer of the project. It models the
@@ -21,19 +22,51 @@ Package structure
 - ``src.models`` defines all domain entities and configuration parameters.
 - ``src.manager`` provides orchestration and reporting logic on top of models.
 
+Manager data
+------------
+The manager stores collections of tenants, apartments, bills, transfers, events,
+and blacklist entries.
+
+The ``tenants`` field contains tenant records loaded from the configured data
+source and used during settlement and debt calculations.
+
 How the package is used
 -----------------------
 Typical flow:
 
 1. Build a :class:`src.models.Parameters` object with data file paths and
-        numeric limits.
+   numeric limits.
 2. Create :class:`src.manager.Manager` with these parameters.
 3. Use manager methods to compute settlements, detect debtors, validate input
-        integrity, and calculate balances or taxes.
+   integrity, and calculate balances or taxes.
+
+Example
+-------
+A simplified usage example::
+
+    from src.manager import Manager
+    from src.models import Parameters
+
+    parameters = Parameters()
+    manager = Manager(parameters)
 
 Data is loaded from JSON files in the ``data/`` directory, then transformed into
 typed model instances. This keeps business operations explicit and easier to
 test than working with raw dictionaries.
+
+Documentation
+-------------
+Public methods should describe their arguments and return values, for example::
+
+    Args:
+    ----
+        year (int):
+            The year for which to calculate the balance.
+
+    Returns:
+    -------
+        float:
+            The annual balance.
 
 Highlights
 ----------
@@ -43,7 +76,8 @@ Highlights
 - Ready for automatic API documentation with ``pdoc``.
 
 Authors
-------
+-------
 Łukasz Kułacz - initial implementation, testing, documentation
-
+Kamil Zając - technik obibok
 """
+```
