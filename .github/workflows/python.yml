@@ -1,7 +1,6 @@
-```yaml
 name: NIP Rent
 
-"on":
+on:
   push:
   workflow_dispatch:
 
@@ -11,22 +10,18 @@ permissions:
   id-token: write
 
 jobs:
-  test-and-deploy:
-    name: Test and deploy documentation
+  test:
+    name: Test with pytest
     runs-on: ubuntu-22.04
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Install UV
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@v7
         with:
-          python-version-file: .python-version
+          python-version-file: ".python-version"
 
       - name: Install the project
         run: uv sync --dev
@@ -40,6 +35,26 @@ jobs:
       - name: Run linter for main_demo.py
         run: uv run ruff check main_demo.py --exit-zero
 
+  deploy-docs:
+    name: Generate and deploy documentation
+    needs: test
+    runs-on: ubuntu-22.04
+
+    environment:
+      name: github-pages
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install the project
+        run: uv sync --dev
+
       - name: Generate Docs
         run: uv run pdoc src -o ./docs-output
 
@@ -49,6 +64,5 @@ jobs:
           path: ./docs-output
 
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
 ```
